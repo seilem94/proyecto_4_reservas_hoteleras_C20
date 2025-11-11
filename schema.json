@@ -30,7 +30,11 @@
       "num_huespedes": {
         "type": "integer",
         "description": "El número de huéspedes para la reserva"
-      }
+      },
+          "nombre_huesped": { 
+            "type": "string",
+            "description": "El nombre del huésped principal de la reserva"
+          }
     },
     "required": [
       "id",
@@ -39,7 +43,8 @@
       "fecha_fin",
       "tipo_habitacion",
       "estado",
-      "num_huespedes"
+      "num_huespedes",
+      "nombre_huesped"
     ],
     "example": {
       "id": 1,
@@ -48,6 +53,7 @@
       "fecha_fin": "2023-05-20",
       "tipo_habitacion": "Doble",
       "estado": "Confirmada",
-      "num_huespedes": 3
+      "num_huespedes": 3,
+      "nombre_huesped": "Juan Pérez"      
     }
 }

@@ -1,7 +1,7 @@
+import { toDate } from '../utils/validators.js';
+
 const reservas = [];
 let nextId = 1;
-
-const toDate = (v) => (v ? new Date(`${v}T00:00:00Z`) : null);
 
 export async function crear(data) {
   const nueva = { id: nextId++, ...data };
@@ -16,30 +16,35 @@ export async function listar(filtros = {}) {
     const h = String(filtros.hotel).toLowerCase();
     out = out.filter((r) => r.hotel.toLowerCase() === h);
   }
+
   if (filtros.tipo_habitacion) {
     const t = String(filtros.tipo_habitacion).toLowerCase();
     out = out.filter((r) => r.tipo_habitacion.toLowerCase() === t);
   }
+
   if (filtros.estado) {
     const e = String(filtros.estado).toLowerCase();
     out = out.filter((r) => r.estado.toLowerCase() === e);
   }
+
   if (Number.isInteger(filtros.num_huespedes)) {
     out = out.filter((r) => r.num_huespedes === filtros.num_huespedes);
   }
 
-  const fi = toDate(filtros.fecha_inicio);
-  const ff = toDate(filtros.fecha_fin);
+  const fi = filtros.fecha_inicio ? toDate(filtros.fecha_inicio) : null;
+  const ff = filtros.fecha_fin ? toDate(filtros.fecha_fin) : null;
+
   if (fi || ff) {
     out = out.filter((r) => {
       const rIni = toDate(r.fecha_inicio);
       const rFin = toDate(r.fecha_fin);
-      const condIni = fi ? rIni >= fi || rFin >= fi : true;
-      const condFin = ff ? rIni <= ff || rFin <= ff : true;
-      return condIni && condFin;
+      // si no hay uno de los extremos del filtro, asumimos -∞/+∞
+      const inicio = fi ?? new Date(-8640000000000000); // mínimo Date
+      const fin    = ff ?? new Date( 8640000000000000); // máximo Date
+      // superposición de [rIni, rFin] con [inicio, fin]
+      return rIni <= fin && rFin >= inicio;
     });
   }
-
   return out;
 }
 

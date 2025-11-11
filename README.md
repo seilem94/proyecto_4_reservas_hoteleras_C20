@@ -30,7 +30,16 @@
     ├── .gitignore
     ├── package-lock.json
     ├── package.json
+    
     └── README.md
+
+### Schema.json
+    Se utiliza el archivo Schema.json como ejemplo y regla, y se le hace una pequeña modificación donde se agrega la condicion "nombre_huesped", de forma que sea boligatorio este dato al generar la reserva. Para esto se modifica el archivo schema.json:
+    
+    - Agregar propiedad "nombre_huesped" en properties.
+    - Agregar "nombre_huesped" al array required.
+    - Incluirlo en example.
+    
 
 ## APLICACIÓN DE SERVICIOS CRUD
 
@@ -76,3 +85,25 @@
 ## Deploy en Render.com
 
     Queda pendiente para la semana ponte al dia, o para estudio personal ya que por temas de tiempo no fue posible implementar esta funcionalidad.
+
+
+## EJEMPLOS/TEST RÁPIDOS
+
+    Se puede correr la API de forma local con "npm run dev" o "npm run start" y luego desde algún CLI como git bash, o WSL 2 (En powershell se puede pero cambia la sintaxis)
+
+        "curl -X POST http://localhost:3000/api/reservas \
+        -H "Content-Type: application/json" \
+        -d '{
+        "hotel": "Hotel Paraíso",
+        "fecha_inicio": "2025-05-15",
+        "fecha_fin": "2025-05-17",
+        "tipo_habitacion": "doble",
+        "estado": "pendiente",
+        "num_huespedes": 3,
+        "nombre_huesped": "Juan Pérez"
+        }'"
+
+    Para ver todas las reservas
+        curl http://localhost:3000/api/reserva/
+
+    

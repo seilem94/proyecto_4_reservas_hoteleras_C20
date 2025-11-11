@@ -6,19 +6,29 @@ export function notFound(req, res, next) {
   );
 }
 
-export function errorHandler(err, req, res, _next) {
-  const isAppError = err instanceof AppError;
-  const status = isAppError ? err.status : 500;
-  const code = isAppError ? err.code : 'INTERNAL_ERROR';
-  const message = isAppError ? err.message : 'Error interno';
-
-  // opcional: log detallado aquí
-  if (!isAppError) {
-    err = new InternalServerError(message, { original: err?.message });
+export function errorHandler(err, _req, res, _next) {
+  //Guard Conditional: Si el error no es una instancia de AppError
+  if (!(err instanceof AppError)) {
+    console.error(err); // Log real del error desconocido
+    return res.status(500).json({
+      ok: false,
+      error: {
+        code: 'INTERNAL_ERROR',
+        message: err?.message || 'Error interno del servidor',
+        details: null,
+      },
+    });
   }
 
-  res.status(status).json({
+  // Si llegamos aquí, err es AppError
+  if (err.status >= 500) console.error(err);
+
+  res.status(err.status).json({
     ok: false,
-    error: { code, message, details: isAppError ? err.details : null },
+    error: {
+      code: err.code,
+      message: err.message,
+      details: err.details ?? null,
+    },
   });
 }

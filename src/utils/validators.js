@@ -10,6 +10,11 @@ export function parseEntero(v) {
 }
 
 export function validateCrear(body) {
+  // ✅ Guard: body debe existir y ser objeto
+  if (!body || typeof body !== 'object') {
+    return { error: 'Body JSON requerido' };
+  }
+
   const required = [
     'hotel',
     'fecha_inicio',
@@ -19,11 +24,13 @@ export function validateCrear(body) {
     'num_huespedes',
     'nombre_huesped',
   ];
+
   for (const k of required) {
     if (body[k] === undefined || body[k] === null || body[k] === '') {
       return { error: `Campo requerido: ${k}` };
     }
   }
+
   if (!isDateString(body.fecha_inicio) || !isDateString(body.fecha_fin)) {
     return { error: 'Las fechas deben tener formato YYYY-MM-DD' };
   }
